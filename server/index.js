@@ -1,8 +1,11 @@
 const express = require('express');
 const app = express();
 const port = 3000;
+const bodyParser = require('body-parser');
 
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 function validateJSONHeaders(req, res, next)
 {
@@ -64,7 +67,7 @@ END OF MIDDLEWARE PART
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
-app.get('/items', (req, res) => { res.json(itemData.items) });
+app.get('/items', (req, res) => { res.json(itemData) });
 
 app.post('/items',
 [
