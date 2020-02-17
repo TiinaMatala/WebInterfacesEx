@@ -71,11 +71,7 @@ app.get('/', (req, res) => res.send('Hello World!'));
 
 app.get('/items', (req, res) => { res.json(items) });
 
-app.post('/items',
-[
-    validateJSONHeaders
-  ],
-    (req, res) => {
+app.post('/items', (req, res) => {
     const newItem = {
         id: items.length + 1,
         title: req.body.title,
