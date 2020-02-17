@@ -10,20 +10,6 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-function validateJSONHeaders(req, res, next)
-{
-    if(req.get('Content-Type') === 'application/json')
-    {
-        next();
-    }
-    else
-    {
-        const err = new Error('Bad Request - Missing Headers');
-        err.status = 400;
-        next(err);
-    }
-}
-
 let items = [{
         id: 1,
         title: "Black shoes",
@@ -44,7 +30,23 @@ let items = [{
 MIDDLEWARE PART
 */
 
-/*function validateNewItem(req, res, next)
+/*
+
+function validateJSONHeaders(req, res, next)
+{
+    if(req.get('Content-Type') === 'application/json')
+    {
+        next();
+    }
+    else
+    {
+        const err = new Error('Bad Request - Missing Headers');
+        err.status = 400;
+        next(err);
+    }
+}
+
+function validateNewItem(req, res, next)
 {
     // prepare error object
     const err = new Error();
