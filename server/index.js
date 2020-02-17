@@ -1,5 +1,8 @@
 const express = require('express');
 const app = express();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' })
+
 const port = 3000;
 const bodyParser = require('body-parser');
 
@@ -21,8 +24,7 @@ function validateJSONHeaders(req, res, next)
     }
 }
 
-let itemData = {
-    items: [{
+let items = [{
         id: 1,
         title: "Black shoes",
         description: "Size 40 shoes, which are in good shape",
@@ -36,7 +38,7 @@ let itemData = {
         sellerInfoName: "Tiina",
         sellerInfoPhone: "0501234567"
     }]
-}
+
 
 /*
 MIDDLEWARE PART
@@ -67,7 +69,7 @@ END OF MIDDLEWARE PART
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
-app.get('/items', (req, res) => { res.json(itemData) });
+app.get('/items', (req, res) => { res.json(items) });
 
 app.post('/items',
 [
@@ -75,7 +77,7 @@ app.post('/items',
   ],
     (req, res) => {
     const newItem = {
-        id: itemData.items.length + 1,
+        id: items.length + 1,
         title: req.body.title,
         description: req.body.description,
         category: req.body.category,
@@ -89,7 +91,7 @@ app.post('/items',
         sellerInfoPhone: req.body.sellerInfoPhone
         }
 
-        itemData.items.push(newItem);
+        items.push(newItem);
 
         res.status(201);
         res.json(newItem);
