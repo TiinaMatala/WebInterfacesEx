@@ -73,14 +73,15 @@ app.get('/', (req, res) => res.send('Hello World!'));
 
 app.get('/items', (req, res) => { res.json(items) });
 
-app.post('/items', (req, res) => {
+var cpUpload = upload.fields([{ name: 'images', maxCount: 4 }])
+app.post('/items', cpUpload, (req, res) => {
     const newItem = {
         id: items.length + 1,
         title: req.body.title,
         description: req.body.description,
         category: req.body.category,
         location: req.body.location,
-        images: req.body.images,
+        images: req.files['images'],
         askingPrice: req.body.askingPrice,
         dateOfPosting: req.body.dateOfPosting,
         deliveryTypeShipping: req.body.deliveryTypeShipping,
