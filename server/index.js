@@ -1,7 +1,9 @@
 const express = require('express');
 const app = express();
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: 'static/' })
+const path = require('path');
+const fs = require('fs');
 
 const port = 3000;
 const bodyParser = require('body-parser');
@@ -9,6 +11,7 @@ const bodyParser = require('body-parser');
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use('/static', express.static(path.join(__dirname, 'public')))
 
 let items = [{
         id: 1,
@@ -52,14 +55,39 @@ function validateNewItem(req, res, next)
     const err = new Error();
     err.name = "Bad Request";
     err.status = 400;
-    if(has(req.body, 'name') == false)
+    if(has(req.body, 'title') == false)
     {
-        err.message = "Missing or empty name";
+        err.message = "Missing or empty title";
         next(err);
     }
-    if(has(req.body, 'image') == false)
+    if(has(req.body, 'description') == false)
     {
-        err.message = "Missing or empty image";
+        err.message = "Missing or empty description";
+        next(err);
+    }
+    if(has(req.body, 'category') == false)
+    {
+        err.message = "Missing or empty category";
+        next(err);
+    }
+    if(has(req.body, 'location') == false)
+    {
+        err.message = "Missing or empty location";
+        next(err);
+    }
+    if(has(req.body, 'askingPrice') == false)
+    {
+        err.message = "Missing or empty asking price";
+        next(err);
+    }
+    if(has(req.body, 'sellerInfoName') == false)
+    {
+        err.message = "Missing or empty seller name";
+        next(err);
+    }
+    if(has(req.body, 'sellerInfoPhone') == false)
+    {
+        err.message = "Missing or empty seller phone number";
         next(err);
     }
     next(); // no validation errors, so pass to the next
