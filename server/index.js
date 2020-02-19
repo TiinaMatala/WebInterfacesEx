@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const multer = require('multer');
-const upload = multer({ dest: 'static/' })
+const upload = multer({ dest: 'public/' })
 const path = require('path');
 const fs = require('fs');
 
@@ -11,7 +11,8 @@ const bodyParser = require('body-parser');
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use('/static', express.static(path.join(__dirname, 'public')))
+//app.use('/static', express.static(path.join(__dirname, 'public')))
+app.use(express.static('public'))
 
 let items = [{
         id: 1,
@@ -27,6 +28,7 @@ let items = [{
         sellerInfoName: "Tiina",
         sellerInfoPhone: "0501234567"
     }]
+
 
 
 /*
@@ -103,6 +105,13 @@ app.get('/items', (req, res) => { res.json(items) });
 
 var cpUpload = upload.fields([{ name: 'images', maxCount: 4 }])
 app.post('/items', cpUpload, (req, res) => {
+    
+//sets name for the uploaded image files
+fs.rename(req.files.path, './public/' + req.files.originalname, function (err) {
+    if (err) throw err;
+    console.log('file renamed');
+})
+
     const newItem = {
         id: items.length + 1,
         title: req.body.title,
