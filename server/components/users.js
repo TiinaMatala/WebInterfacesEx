@@ -1,54 +1,126 @@
-var express = require('express');
-var router = express.Router();
-var users = require('../models/users');
-const Strategy = require('passport-http').BasicStrategy;
+const express = require('express');
+const app = express();
+const port = 3000;
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const db = require('../db');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
+const Strategy = require('passport-http').BasicStrategy;
+const users = require('../models/users');
+const router = express.Router()
 
-/*
+const saltRounds = 4;
 
-passport.use(new Strategy((email, password, cb) => {
-    db.query('SELECT user_id, email, password FROM users WHERE email = ?', [email]).then(dbResults => {
-       if(dbResults.length == 0)
-      {
-        return cb(null, false);
-      }
-   bcrypt.compare(password, dbResults[0].password).then(bcryptResult => {
-        if(bcryptResult == true)
-        {
-          cb(null, dbResults[0]);
-        }
-        else
-        {
-          return cb(null, false);
-        }
+
+app.use(bodyParser.json());
+app.use(cors())
+
+
+router.post('/register', (req, res) => {
+  var password=request.body.password;
+	var email = request.body.email;
+if((typeof email === "string") &&
+    (email.length > 4) &&
+    (typeof password === "string") &&
+    (password.length > 6))
+ {
+ bcrypt.hash(password, saltRounds).then(hash =>
+     db.query('INSERT INTO users (email, password) VALUES (?,?)', [email, hash])
+    )
+  .then(dbResults => {
+       console.log(dbResults);
+    res.sendStatus(201);
       })
-  
-    }).catch(dbError => cb(err))
-  }));
+  .catch(error => res.sendStatus(403));
+ }
+  }) 
 
-  router.get('/:id?', function(req, res, next) {
-    if (req.params.id) {
-      users.getById(req.params.id, function(err, rows) {
-        if (err) {
-          res.json(err);
+  router.post('/', function(req, res, next) {
+  users.add(req.body, function(err, count) {
+      
+    if (err) {
+        res.json(err);
+      } else {
+        res.json(req.body); //or return count for 1 & 0
+      }
+    });
+  });
+  
+
+  router.post('/login', function(request, response) {
+    var password=request.body.password;
+    var email = request.body.email;
+    console.log('send email:',email);
+    if (email && password) {
+    db.query('SELECT * FROM users WHERE email = ?', 
+      [email], function(error, results, fields) {
+        if (results.length > 0) {
+          if(bcrypt.compareSync(password, results[0].password)){
+            response.send(results[0].user_id.toString());
+            console.log("user_id=",results[0].user_id);
+          }
+  
         } else {
-          res.json(rows);
-        }
+          console.log("unsuccessful");
+          response.send(false);
+        }			
+        response.end();
       });
     } else {
-      users.get(function(err, rows) {
-        if (err) {
-          res.json(err);
-        } else {
-          res.json(rows);
-        }
-      });
-    }
+      response.send('Please enter email and password');
+      response.end();
+    } 
+  });
+ 
+ router.get('/users/:user_id',
+  //passport.authenticate('basic', { session: false }),
+  (req, res) => {
+   db.query('SELECT user_id, email FROM users WHERE user_id = ?', [req.params.user_id]).then(results => {
+      res.json(results);
+
+    })
+    
+    router.get('users/:user_id?', function(req, res, next) {
+      if (req.params.user_id) {
+        users.getByUserId(req.params.user_id, function(err, rows) {
+          if (err) {
+            res.json(err);
+          } else {
+            res.json(rows);
+          }
+        });
+      } else {
+        users.get(function(err, rows) {
+          if (err) {
+            res.json(err);
+          } else {
+            res.json(rows);
+          }
+        });
+      }
+    });
+    
+
+
+    router.get('/users', (req, res) => {
+       db.query('SELECT user_id, email FROM users').then(results => {
+        res.json(results);
+    
+      })
+    
+    })
+    
+
   });
 
 
 
-*/
+
+
+      
+ 
+  module.exports = router;
 
 
 
