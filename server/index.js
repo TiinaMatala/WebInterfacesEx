@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 app.use(express.static('public'))
 
 let items = [{
-        id: 1,
+        itemId: 1,
         title: "Black shoes",
         description: "Size 40 shoes, which are in good shape",
         category: "Clothes and shoes",
@@ -107,13 +107,13 @@ var cpUpload = upload.fields([{ name: 'images', maxCount: 4 }])
 app.post('/items', cpUpload, (req, res) => {
     
 //sets name for the uploaded image files
-fs.rename(req.files.path, './public/' + req.files.originalname, function (err) {
-    if (err) throw err;
-    console.log('file renamed');
-})
+let images = [] 
+req.files.forEach((element, i) => {
+fs.renameSync(req.files[i].path, './public/' + req.files[i].originalname)
+});
 
     const newItem = {
-        id: items.length + 1,
+        itemId: items.length + 1,
         title: req.body.title,
         description: req.body.description,
         category: req.body.category,
