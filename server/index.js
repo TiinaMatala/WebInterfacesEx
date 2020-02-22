@@ -11,8 +11,7 @@ const bodyParser = require('body-parser');
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-//app.use('/static', express.static(path.join(__dirname, 'public')))
-app.use(express.static('public'))
+app.use('/static', express.static(path.join(__dirname, 'public')))
 
 let items = [{
         itemId: 1,
@@ -105,12 +104,20 @@ app.get('/items', (req, res) => { res.json(items) });
 
 var cpUpload = upload.fields([{ name: 'images', maxCount: 4 }])
 app.post('/items', cpUpload, (req, res) => {
-    
+    let images = []
 //sets name for the uploaded image files
-let images = [] 
-req.files.forEach((element, i) => {
-fs.renameSync(req.files[i].path, './public/' + req.files[i].originalname)
-});
+    if (req.files['images'].length <= 4) {
+        console.log("visited");
+
+        req.files['images'].forEach((element) => {
+        fs.renameSync(element.path, './public/' + element.originalname)
+        });
+        images.push(req.files.originalname)
+    } 
+    else {
+        res.send('Max four images allowed');
+        console.log("no files found");
+    }    
 
     const newItem = {
         itemId: items.length + 1,
@@ -124,7 +131,7 @@ fs.renameSync(req.files[i].path, './public/' + req.files[i].originalname)
         deliveryTypeShipping: req.body.deliveryTypeShipping,
         deliveryTypePickup: req.body.deliveryTypePickup,
         sellerInfoName: req.body.sellerInfoName,
-        sellerInfoPhone: req.body.sellerInfoPhone
+        sellerInfoPhone: req.body.sellerInfoPhone,
         }
 
         items.push(newItem);
