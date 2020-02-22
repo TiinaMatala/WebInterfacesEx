@@ -64,8 +64,9 @@ const newItem = {
 
 })
 
-/*router.delete('./:id', (req, res) => {
-
-})*/
+router.delete('./:itemId', (req, res) => {
+    items = items.filter(item => itemId != req.params.id );
+    res.sendStatus(200);
+})
 
 module.exports = router;
