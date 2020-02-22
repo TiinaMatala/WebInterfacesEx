@@ -71,7 +71,7 @@ router.post('/login', function (req, res) {
   }
 });
 
-router.get('users/:user_id',
+router.get('/:user_id',
   //passport.authenticate('basic', { session: false }),
   (req, res) => {
     db.query('SELECT user_id, email FROM users WHERE user_id = ?', [req.params.user_id]).then(results => {
@@ -80,7 +80,7 @@ router.get('users/:user_id',
     })
   });
 
-    router.get('/:user_id?', function (req, res, next) {
+    /*router.get('/:user_id?', function (req, res, next) {
       if (req.params.user_id) {
         users.getByUserId(req.params.user_id, function (err, rows) {
           if (err) {
@@ -98,11 +98,11 @@ router.get('users/:user_id',
           }
         });
       }
-    });
+    }); */
 
 
 
-    router.get('/users', (req, res) => {
+    router.get('/', (req, res) => {
       db.query('SELECT user_id, email FROM users').then(results => {
         res.json(results);
 
