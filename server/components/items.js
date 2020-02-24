@@ -64,7 +64,7 @@ const newItem = {
 
 })
 
-router.delete('./:itemId', (req, res) => {
+router.delete('/:itemId', (req, res) => {
     items = items.filter(item => item.id != req.params.id );
     res.sendStatus(200);
 })
