@@ -11,7 +11,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const jwtSecretKey = require('./jwt-key.json');
 
 
-
+/*
 
 passport.use(new BasicStrategy(
   function(email, password, done) {
@@ -41,7 +41,7 @@ passport.use(new BasicStrategy(
     }
     return done(null, user);
   }
-));
+));*/
 
 let options = {}
 
@@ -74,7 +74,7 @@ app.get(
     passport.authenticate('basic', { session: false }),
     (req, res) => {
       const body = { 
-        id: req.user.id,
+        user_id: req.user.user_id,
         email : req.user.email, 
       };  
   

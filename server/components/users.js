@@ -8,14 +8,15 @@ const passport = require('passport');
 const Strategy = require('passport-http').BasicStrategy;
 const users = require('../models/users');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const jwtstrategy = require('../Middlewares/jwt') 
+const httpBasic = require('../Middlewares/http-basic') ;
+const BasicStrategy = require('passport-http').BasicStrategy;
 
 const saltRounds = 4;
 
 
 app.use(bodyParser.json());
 app.use(cors())
+
 
 
 router.post('/register', (req, res) => {
@@ -52,7 +53,8 @@ console.log('jhvjhv')
 });
 
 
-router.post('/login', function (req, res) {
+router.post('/login', 
+ passport.authenticate('basic', { session: false }), function (req, res) {
   var password = req.body.password;
   var email = req.body.email;
   console.log('send email:', email);
@@ -61,7 +63,7 @@ router.post('/login', function (req, res) {
       [email], function (error, results, fields) {
         if (results.length > 0) {
           if (bcrypt.compareSync(password, results[0].password)) {
-            response.send(results[0].user_id.toString());
+            res.send(results[0].user_id.toString());
             console.log("user_id=", results[0].user_id);
           }
 
