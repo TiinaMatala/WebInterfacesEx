@@ -63,13 +63,13 @@ router.post('/login', function (req, res) {
 
         } else {
           console.log("unsuccessful");
-          response.send(false);
+          res.send(false);
         }
-        response.end();
+        res.end();
       });
   } else {
-    response.send('Please enter email and password');
-    response.end();
+    res.send('Please enter email and password');
+    res.end();
   }
 });
 
