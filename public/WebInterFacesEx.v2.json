@@ -1,0 +1,994 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "WebInterFacesEx",
+    "version": "1.0",
+    "description": "A web application which primary function is to serve as a platform for selling and buying used items. An example of this in Finland would be Tori.fi or globally ebay.com"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/items": {
+      "post": {
+        "summary": "",
+        "operationId": "post-items",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "description": "Logged-in user can add an item/items for sale",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "items",
+                "type": "object",
+                "x-examples": {
+                  "example-1": {
+                    "title": "",
+                    "description": "",
+                    "category": "",
+                    "location": "",
+                    "images": "",
+                    "askingPrice": "",
+                    "dateOfPosting": "",
+                    "deliveryType": {}
+                  }
+                },
+                "description": "Information needed for creating a new product",
+                "properties": {
+                  "itemId": {
+                    "type": "integer",
+                    "description": "Individual id given to each item in sale"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "The title of the item, should not include price"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the product: color, size etc."
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "E.g. clothes and shoes, accessories and clocks"
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "The name of the city/municipality where the product locates"
+                  },
+                  "images": {
+                    "type": "string",
+                    "description": "Max. four images of the item"
+                  },
+                  "askingPrice": {
+                    "type": "number",
+                    "description": "The price of the item"
+                  },
+                  "dateOfPosting": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "The date when the item was posted to the service"
+                  },
+                  "deliveryTypeShipping": {
+                    "description": "The item can be delivered to buyer",
+                    "type": "boolean"
+                  },
+                  "deliveryTypePickup": {
+                    "description": "The item can be picked up from the seller",
+                    "type": "boolean"
+                  },
+                  "sellerInfoName": {
+                    "type": "string",
+                    "description": "The name of the seller"
+                  },
+                  "sellerInfoPhone": {
+                    "type": "string",
+                    "description": "The phone number of the seller"
+                  }
+                },
+                "required": [
+                  "title",
+                  "description",
+                  "category",
+                  "location",
+                  "askingPrice",
+                  "dateOfPosting",
+                  "deliveryTypeShipping"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/register": {
+      "post": {
+        "summary": "",
+        "operationId": "post-users",
+        "responses": {
+          "201": {
+            "description": "User created successfully"
+          },
+          "400": {
+            "description": "The credentials are wrong. You need to have \"username\" and \"password\"",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "The username is taken already"
+          }
+        },
+        "description": "A new user can register to service",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "users",
+                "type": "object",
+                "description": "Information needed for user registration and login",
+                "x-examples": {
+                  "example-1": {
+                    "id": 3,
+                    "name": "test",
+                    "email": "test@test.com",
+                    "password": "test"
+                  }
+                },
+                "properties": {
+                  "userId": {
+                    "type": "integer",
+                    "description": "The unique id assigned to the user"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "users email address for buyers' contacts"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "User's password"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "parameters": []
+    },
+    "/items/{id}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "put": {
+        "summary": "",
+        "operationId": "put-items-id",
+        "responses": {
+          "200": {
+            "description": "The data was changed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "items",
+                  "type": "object",
+                  "x-examples": {
+                    "example-1": {
+                      "title": "",
+                      "description": "",
+                      "category": "",
+                      "location": "",
+                      "images": "",
+                      "askingPrice": "",
+                      "dateOfPosting": "",
+                      "deliveryType": {}
+                    }
+                  },
+                  "description": "Information needed for creating a new product",
+                  "properties": {
+                    "itemId": {
+                      "type": "integer",
+                      "description": "Individual id given to each item in sale"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "The title of the item, should not include price"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the product: color, size etc."
+                    },
+                    "category": {
+                      "type": "string",
+                      "description": "E.g. clothes and shoes, accessories and clocks"
+                    },
+                    "location": {
+                      "type": "string",
+                      "description": "The name of the city/municipality where the product locates"
+                    },
+                    "images": {
+                      "type": "string",
+                      "description": "Max. four images of the item"
+                    },
+                    "askingPrice": {
+                      "type": "number",
+                      "description": "The price of the item"
+                    },
+                    "dateOfPosting": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "The date when the item was posted to the service"
+                    },
+                    "deliveryTypeShipping": {
+                      "description": "The item can be delivered to buyer",
+                      "type": "boolean"
+                    },
+                    "deliveryTypePickup": {
+                      "description": "The item can be picked up from the seller",
+                      "type": "boolean"
+                    },
+                    "sellerInfoName": {
+                      "type": "string",
+                      "description": "The name of the seller"
+                    },
+                    "sellerInfoPhone": {
+                      "type": "string",
+                      "description": "The phone number of the seller"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "description",
+                    "category",
+                    "location",
+                    "askingPrice",
+                    "dateOfPosting",
+                    "deliveryTypeShipping"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "description": "Logged-in user can modify his/her posting",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "items",
+                "type": "object",
+                "x-examples": {
+                  "example-1": {
+                    "title": "",
+                    "description": "",
+                    "category": "",
+                    "location": "",
+                    "images": "",
+                    "askingPrice": "",
+                    "dateOfPosting": "",
+                    "deliveryType": {}
+                  }
+                },
+                "description": "Information needed for creating a new product",
+                "properties": {
+                  "itemId": {
+                    "type": "integer",
+                    "description": "Individual id given to each item in sale"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "The title of the item, should not include price"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the product: color, size etc."
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "E.g. clothes and shoes, accessories and clocks"
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "The name of the city/municipality where the product locates"
+                  },
+                  "images": {
+                    "type": "string",
+                    "description": "Max. four images of the item"
+                  },
+                  "askingPrice": {
+                    "type": "number",
+                    "description": "The price of the item"
+                  },
+                  "dateOfPosting": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "The date when the item was posted to the service"
+                  },
+                  "deliveryTypeShipping": {
+                    "description": "The item can be delivered to buyer",
+                    "type": "boolean"
+                  },
+                  "deliveryTypePickup": {
+                    "description": "The item can be picked up from the seller",
+                    "type": "boolean"
+                  },
+                  "sellerInfoName": {
+                    "type": "string",
+                    "description": "The name of the seller"
+                  },
+                  "sellerInfoPhone": {
+                    "type": "string",
+                    "description": "The phone number of the seller"
+                  }
+                },
+                "required": [
+                  "title",
+                  "description",
+                  "category",
+                  "location",
+                  "askingPrice",
+                  "dateOfPosting",
+                  "deliveryTypeShipping"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "",
+        "operationId": "delete-items-id",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "description": "Logged-in user is able to delete his/her posting",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "items",
+                "type": "object",
+                "x-examples": {
+                  "example-1": {
+                    "title": "",
+                    "description": "",
+                    "category": "",
+                    "location": "",
+                    "images": "",
+                    "askingPrice": "",
+                    "dateOfPosting": "",
+                    "deliveryType": {}
+                  }
+                },
+                "description": "Information needed for creating a new product",
+                "properties": {
+                  "itemId": {
+                    "type": "integer",
+                    "description": "Individual id given to each item in sale"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "The title of the item, should not include price"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the product: color, size etc."
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "E.g. clothes and shoes, accessories and clocks"
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "The name of the city/municipality where the product locates"
+                  },
+                  "images": {
+                    "type": "string",
+                    "description": "Max. four images of the item"
+                  },
+                  "askingPrice": {
+                    "type": "number",
+                    "description": "The price of the item"
+                  },
+                  "dateOfPosting": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "The date when the item was posted to the service"
+                  },
+                  "deliveryTypeShipping": {
+                    "description": "The item can be delivered to buyer",
+                    "type": "boolean"
+                  },
+                  "deliveryTypePickup": {
+                    "description": "The item can be picked up from the seller",
+                    "type": "boolean"
+                  },
+                  "sellerInfoName": {
+                    "type": "string",
+                    "description": "The name of the seller"
+                  },
+                  "sellerInfoPhone": {
+                    "type": "string",
+                    "description": "The phone number of the seller"
+                  }
+                },
+                "required": [
+                  "title",
+                  "description",
+                  "category",
+                  "location",
+                  "askingPrice",
+                  "dateOfPosting",
+                  "deliveryTypeShipping"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "summary": "",
+        "operationId": "post-users-login",
+        "responses": {
+          "202": {
+            "description": "The username and password was correct"
+          },
+          "403": {
+            "description": "Wrong username or password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "x-access-token": {
+                      "type": "string",
+                      "description": "JWT which was generated for the authenticated user"
+                    },
+                    "User’s id": {
+                      "type": "string",
+                      "description": "User's id"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "description": "Login into the system and get the token back",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/items/searchByLocation": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "items",
+                  "type": "object",
+                  "x-examples": {
+                    "example-1": {
+                      "title": "",
+                      "description": "",
+                      "category": "",
+                      "location": "",
+                      "images": "",
+                      "askingPrice": "",
+                      "dateOfPosting": "",
+                      "deliveryType": {}
+                    }
+                  },
+                  "description": "Information needed for creating a new product",
+                  "properties": {
+                    "itemId": {
+                      "type": "integer",
+                      "description": "Individual id given to each item in sale"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "The title of the item, should not include price"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the product: color, size etc."
+                    },
+                    "category": {
+                      "type": "string",
+                      "description": "E.g. clothes and shoes, accessories and clocks"
+                    },
+                    "location": {
+                      "type": "string",
+                      "description": "The name of the city/municipality where the product locates"
+                    },
+                    "images": {
+                      "type": "string",
+                      "description": "Max. four images of the item"
+                    },
+                    "askingPrice": {
+                      "type": "number",
+                      "description": "The price of the item"
+                    },
+                    "dateOfPosting": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "The date when the item was posted to the service"
+                    },
+                    "deliveryTypeShipping": {
+                      "description": "The item can be delivered to buyer",
+                      "type": "boolean"
+                    },
+                    "deliveryTypePickup": {
+                      "description": "The item can be picked up from the seller",
+                      "type": "boolean"
+                    },
+                    "sellerInfoName": {
+                      "type": "string",
+                      "description": "The name of the seller"
+                    },
+                    "sellerInfoPhone": {
+                      "type": "string",
+                      "description": "The phone number of the seller"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "description",
+                    "category",
+                    "location",
+                    "askingPrice",
+                    "dateOfPosting",
+                    "deliveryTypeShipping"
+                  ]
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Wrong search word"
+          }
+        },
+        "operationId": "get-items-searchByLocation",
+        "description": "All users (logged-in and non-logged-in) can search the item by location",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "location",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/items/searchByCategory": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "items",
+                  "type": "object",
+                  "x-examples": {
+                    "example-1": {
+                      "title": "",
+                      "description": "",
+                      "category": "",
+                      "location": "",
+                      "images": "",
+                      "askingPrice": "",
+                      "dateOfPosting": "",
+                      "deliveryType": {}
+                    }
+                  },
+                  "description": "Information needed for creating a new product",
+                  "properties": {
+                    "itemId": {
+                      "type": "integer",
+                      "description": "Individual id given to each item in sale"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "The title of the item, should not include price"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the product: color, size etc."
+                    },
+                    "category": {
+                      "type": "string",
+                      "description": "E.g. clothes and shoes, accessories and clocks"
+                    },
+                    "location": {
+                      "type": "string",
+                      "description": "The name of the city/municipality where the product locates"
+                    },
+                    "images": {
+                      "type": "string",
+                      "description": "Max. four images of the item"
+                    },
+                    "askingPrice": {
+                      "type": "number",
+                      "description": "The price of the item"
+                    },
+                    "dateOfPosting": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "The date when the item was posted to the service"
+                    },
+                    "deliveryTypeShipping": {
+                      "description": "The item can be delivered to buyer",
+                      "type": "boolean"
+                    },
+                    "deliveryTypePickup": {
+                      "description": "The item can be picked up from the seller",
+                      "type": "boolean"
+                    },
+                    "sellerInfoName": {
+                      "type": "string",
+                      "description": "The name of the seller"
+                    },
+                    "sellerInfoPhone": {
+                      "type": "string",
+                      "description": "The phone number of the seller"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "description",
+                    "category",
+                    "location",
+                    "askingPrice",
+                    "dateOfPosting",
+                    "deliveryTypeShipping"
+                  ]
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Wrong search word"
+          }
+        },
+        "operationId": "get-items-searchByCategory",
+        "description": "All users (logged-in and non-logged-in) can search the item by category",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "category",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/items/searchByDate": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "items",
+                  "type": "object",
+                  "x-examples": {
+                    "example-1": {
+                      "title": "",
+                      "description": "",
+                      "category": "",
+                      "location": "",
+                      "images": "",
+                      "askingPrice": "",
+                      "dateOfPosting": "",
+                      "deliveryType": {}
+                    }
+                  },
+                  "description": "Information needed for creating a new product",
+                  "properties": {
+                    "itemId": {
+                      "type": "integer",
+                      "description": "Individual id given to each item in sale"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "The title of the item, should not include price"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the product: color, size etc."
+                    },
+                    "category": {
+                      "type": "string",
+                      "description": "E.g. clothes and shoes, accessories and clocks"
+                    },
+                    "location": {
+                      "type": "string",
+                      "description": "The name of the city/municipality where the product locates"
+                    },
+                    "images": {
+                      "type": "string",
+                      "description": "Max. four images of the item"
+                    },
+                    "askingPrice": {
+                      "type": "number",
+                      "description": "The price of the item"
+                    },
+                    "dateOfPosting": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "The date when the item was posted to the service"
+                    },
+                    "deliveryTypeShipping": {
+                      "description": "The item can be delivered to buyer",
+                      "type": "boolean"
+                    },
+                    "deliveryTypePickup": {
+                      "description": "The item can be picked up from the seller",
+                      "type": "boolean"
+                    },
+                    "sellerInfoName": {
+                      "type": "string",
+                      "description": "The name of the seller"
+                    },
+                    "sellerInfoPhone": {
+                      "type": "string",
+                      "description": "The phone number of the seller"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "description",
+                    "category",
+                    "location",
+                    "askingPrice",
+                    "dateOfPosting",
+                    "deliveryTypeShipping"
+                  ]
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Wrong search word"
+          }
+        },
+        "operationId": "get-items-searchByDate",
+        "description": "All users (logged-in and non-logged-in) can search the item by date of posting",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "dateOfPosting",
+            "required": true,
+            "description": "date in format dd-mm-yyyy"
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "users": {
+        "title": "users",
+        "type": "object",
+        "description": "Information needed for user registration and login",
+        "x-examples": {
+          "example-1": {
+            "id": 3,
+            "name": "test",
+            "email": "test@test.com",
+            "password": "test"
+          }
+        },
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "description": "The unique id assigned to the user"
+          },
+          "email": {
+            "type": "string",
+            "description": "users email address for buyers' contacts"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "items": {
+        "title": "items",
+        "type": "object",
+        "x-examples": {
+          "example-1": {
+            "title": "",
+            "description": "",
+            "category": "",
+            "location": "",
+            "images": "",
+            "askingPrice": "",
+            "dateOfPosting": "",
+            "deliveryType": {}
+          }
+        },
+        "description": "Information needed for creating a new product",
+        "properties": {
+          "itemId": {
+            "type": "integer",
+            "description": "Individual id given to each item in sale"
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the item, should not include price"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the product: color, size etc."
+          },
+          "category": {
+            "type": "string",
+            "description": "E.g. clothes and shoes, accessories and clocks"
+          },
+          "location": {
+            "type": "string",
+            "description": "The name of the city/municipality where the product locates"
+          },
+          "images": {
+            "type": "string",
+            "description": "Max. four images of the item"
+          },
+          "askingPrice": {
+            "type": "number",
+            "description": "The price of the item"
+          },
+          "dateOfPosting": {
+            "type": "string",
+            "format": "date",
+            "description": "The date when the item was posted to the service"
+          },
+          "deliveryTypeShipping": {
+            "description": "The item can be delivered to buyer",
+            "type": "boolean"
+          },
+          "deliveryTypePickup": {
+            "description": "The item can be picked up from the seller",
+            "type": "boolean"
+          },
+          "sellerInfoName": {
+            "type": "string",
+            "description": "The name of the seller"
+          },
+          "sellerInfoPhone": {
+            "type": "string",
+            "description": "The phone number of the seller"
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "category",
+          "location",
+          "askingPrice",
+          "dateOfPosting",
+          "deliveryTypeShipping"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}
