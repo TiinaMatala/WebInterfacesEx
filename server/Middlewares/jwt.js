@@ -1,4 +1,4 @@
-/*const express = require('express');
+const express = require('express');
 const app = express();
 const passport = require('passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
@@ -88,4 +88,4 @@ app.get(
       return res.json({ token });
   }
 )
- */
+ 

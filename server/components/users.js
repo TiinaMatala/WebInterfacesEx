@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.use(cors())
 
 
-router.post('/register', (req, res) => {
+/*router.post('/register', (req, res) => {
   var password = req.body.password.trim();
   var email = req.body.email.trim();
   if ((typeof email === "string") &&
@@ -34,7 +34,7 @@ router.post('/register', (req, res) => {
       })
       .catch(error => res.sendStatus(403));
   }
-})
+}) */
 
 router.post('/', function (req, res, next) {
   users.add(req.body, function (err, count) {
