@@ -34,6 +34,4 @@ closeAll: () => { pool.end();}
 
 };
 
-
-
 module.exports = api;

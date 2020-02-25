@@ -7,7 +7,9 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const Strategy = require('passport-http').BasicStrategy;
 const users = require('../models/users');
-const router = express.Router()
+const router = express.Router();
+const jwt = require('jsonwebtoken');
+const jwtstrategy = require('../Middlewares/jwt') 
 
 const saltRounds = 4;
 
@@ -40,7 +42,7 @@ console.log('jhvjhv')
     if (err) {                                                                                                                                                                                                                                                                                                                                                                                                                              
       res.json(err);
     } else {
-      res.json(req.body); //or return count for 1 & 0
+      res.json(req.body); 
     }
   });
 });

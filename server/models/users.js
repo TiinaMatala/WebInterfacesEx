@@ -25,12 +25,7 @@ var users= {
       callback);
 
   },
-  get: function(callback) {
-    return db.query('select * from users', callback);
-  },
-  getByUserId: function(user_id, callback) {
-    return db.query('select * from users where user_id=?', [user_id], callback);
-  },
+  
 
   };
 
