@@ -18,13 +18,14 @@ app.use(bodyParser.json());
 app.use(cors())
 
 
-/*router.post('/register', (req, res) => {
+router.post('/register', (req, res) => {
   var password = req.body.password.trim();
   var email = req.body.email.trim();
   if ((typeof email === "string") &&
     (email.length > 4) &&
     (typeof password === "string") &&
     (password.length > 6)) {
+      console.log(password)
     bcrypt.hash(password, saltRounds).then(hash =>
       db.query('INSERT INTO users (email, password) VALUES (?,?)', [email, hash])
     )
@@ -32,9 +33,12 @@ app.use(cors())
         console.log(dbResults);
         res.sendStatus(201);
       })
-      .catch(error => res.sendStatus(403));
+      
+      .catch(error => {
+        console.log(error);
+      res.sendStatus(403) });
   }
-}) */
+}) 
 
 router.post('/', function (req, res, next) {
   users.add(req.body, function (err, count) {
