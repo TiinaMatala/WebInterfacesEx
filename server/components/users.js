@@ -6,7 +6,6 @@ const db = require('../db');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const Strategy = require('passport-http').BasicStrategy;
-const users = require('../models/users');
 const router = express.Router();
 const basicstrategy = require('../Middlewares/http-basic') ;
 const BasicStrategy = require('passport-http').BasicStrategy;
@@ -17,6 +16,22 @@ const saltRounds = 4;
 app.use(bodyParser.json());
 app.use(cors());
 
+let users = [
+
+  {
+     user_id: 1 ,
+     email: "didi@oamk.fi",
+     password: "didididi"
+  }
+   ,
+  {
+    user_id: 2 ,
+    email: "lina@oamk.fi",
+    password: "lina123"
+ }
+
+]
+
 
 router.post('/register', (req, res) => {
   var password = req.body.password.trim();
@@ -26,86 +41,32 @@ router.post('/register', (req, res) => {
     (typeof password === "string") &&
     (password.length > 6)) {
       console.log(password)
-    bcrypt.hash(password, saltRounds).then(hash =>
-      db.query('INSERT INTO users (email, password) VALUES (?,?)', [email, hash])
-    )
-      .then(dbResults => {
+    bcrypt.hash(password, saltRounds)
+    .then(hash =>
+    db.query('INSERT INTO users (email, password) VALUES (?,?)', [email, hash])
+      )
+    .then(dbResults => {
         console.log(dbResults);
         res.sendStatus(201);
       })
       
-      .catch(error => {
+    .catch(error => {
         console.log(error);
       res.sendStatus(403) });
   }
 }) 
 router.post('/login', 
- passport.authenticate('basic', { session: false }), function (req, res) {
-  var password = req.body.password;
-  var email = req.body.email;
-  console.log('send email:', email);
-  if (email && password) {
-    db.query('SELECT * FROM users WHERE email = ?',
-      [email], function (error, results, fields) {
-        if (results.length > 0) {
-          if (bcrypt.compareSync(password, results[0].password)) {
-            res.send(results[0].user_id.toString());
-            console.log("user_id=", results[0].user_id);
-          }
-
-        } else {
-          console.log("unsuccessful");
-          res.send(false);
-        }
-        res.end();
-      });
-  } else {
-    res.send('Please enter email and password');
-    res.end();
-  }
-});
-router.post('/', function (req, res, next) {
-  users.add(req.body, function (err, count) {
-console.log('jhvjhv')
-    if (err) {                                                                                                                                                                                                                                                                                                                                                                                                                              
-      res.json(err);
-    } else {
-      res.json(req.body); 
-    }
+ passport.authenticate('basic', { session: false }),
+  function (req, res ) {
+  
+          res.send(req.user.user_id.toString());
+            console.log("user_id=", req.user.user_id);
+          
   });
-});
 
 
-
-/*
-router.get('/login',
-passport.authenticate('basic', { session: false }), function (req, res) {
-  var password = req.body.password;
-  var email = req.body.email;
-  console.log('send email:', email);
-  if (email && password) {
-    db.query('SELECT * FROM users WHERE email = ?',
-      [email], function (error, results, fields) {
-        if (results.length > 0) {
-          if (bcrypt.compareSync(password, results[0].password)) {
-            res.send(results[0].user_id.toString());
-            console.log("user_id=", results[0].user_id);
-          }
-
-        } else {
-          console.log("unsuccessful");
-          res.send(false);
-        }
-        res.end();
-      });
-  } else {
-    res.send('Please enter email and password');
-    res.end();
-  }
-});
-*/
 router.get('/:user_id',
-  //passport.authenticate('basic', { session: false }),
+  passport.authenticate('basic', { session: false }),
   (req, res) => {
     db.query('SELECT user_id, email FROM users WHERE user_id = ?', [req.params.user_id]).then(results => {
       res.json(results);
@@ -113,44 +74,13 @@ router.get('/:user_id',
     })
   });
 
-    /*router.get('/:user_id?', function (req, res, next) {
-      if (req.params.user_id) {
-        users.getByUserId(req.params.user_id, function (err, rows) {
-          if (err) {
-            res.json(err);
-          } else {
-            res.json(rows);
-          }
-        });
-      } else {
-        users.get(function (err, rows) {
-          if (err) {
-            res.json(err);
-          } else {
-            res.json(rows);
-          }
-        });
-      }
-    }); */
-
-
-
-    router.get('/', (req, res) => {
+     router.get('/', (req, res) => {
       db.query('SELECT user_id, email FROM users').then(results => {
         res.json(results);
 
       })
 
     })
-
-
-
-
-
-
-
-
-
 
 module.exports = router;
 
