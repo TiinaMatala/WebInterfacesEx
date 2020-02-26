@@ -8,15 +8,14 @@ const passport = require('passport');
 const Strategy = require('passport-http').BasicStrategy;
 const users = require('../models/users');
 const router = express.Router();
-const httpBasic = require('../Middlewares/http-basic') ;
+const basicstrategy = require('../Middlewares/http-basic') ;
 const BasicStrategy = require('passport-http').BasicStrategy;
 
 const saltRounds = 4;
 
 
 app.use(bodyParser.json());
-app.use(cors())
-
+app.use(cors());
 
 
 router.post('/register', (req, res) => {
@@ -51,10 +50,36 @@ console.log('jhvjhv')
     }
   });
 });
-
+/*
 
 router.post('/login', 
  passport.authenticate('basic', { session: false }), function (req, res) {
+  var password = req.body.password;
+  var email = req.body.email;
+  console.log('send email:', email);
+  if (email && password) {
+    db.query('SELECT * FROM users WHERE email = ?',
+      [email], function (error, results, fields) {
+        if (results.length > 0) {
+          if (bcrypt.compareSync(password, results[0].password)) {
+            res.send(results[0].user_id.toString());
+            console.log("user_id=", results[0].user_id);
+          }
+
+        } else {
+          console.log("unsuccessful");
+          res.send(false);
+        }
+        res.end();
+      });
+  } else {
+    res.send('Please enter email and password');
+    res.end();
+  }
+});
+*/
+router.get('/login',
+passport.authenticate('basic', { session: false }), function (req, res) {
   var password = req.body.password;
   var email = req.body.email;
   console.log('send email:', email);
