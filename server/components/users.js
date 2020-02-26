@@ -39,19 +39,6 @@ router.post('/register', (req, res) => {
       res.sendStatus(403) });
   }
 }) 
-
-router.post('/', function (req, res, next) {
-  users.add(req.body, function (err, count) {
-console.log('jhvjhv')
-    if (err) {                                                                                                                                                                                                                                                                                                                                                                                                                              
-      res.json(err);
-    } else {
-      res.json(req.body); 
-    }
-  });
-});
-/*
-
 router.post('/login', 
  passport.authenticate('basic', { session: false }), function (req, res) {
   var password = req.body.password;
@@ -77,7 +64,20 @@ router.post('/login',
     res.end();
   }
 });
-*/
+router.post('/', function (req, res, next) {
+  users.add(req.body, function (err, count) {
+console.log('jhvjhv')
+    if (err) {                                                                                                                                                                                                                                                                                                                                                                                                                              
+      res.json(err);
+    } else {
+      res.json(req.body); 
+    }
+  });
+});
+
+
+
+/*
 router.get('/login',
 passport.authenticate('basic', { session: false }), function (req, res) {
   var password = req.body.password;
@@ -103,7 +103,7 @@ passport.authenticate('basic', { session: false }), function (req, res) {
     res.end();
   }
 });
-
+*/
 router.get('/:user_id',
   //passport.authenticate('basic', { session: false }),
   (req, res) => {
