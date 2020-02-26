@@ -3,7 +3,6 @@ const express = require('express');
 
 const router = express.Router()
 const cors = require('cors');
-const bodyParser = require('body-parser')
 const app = express();
 const multer = require('multer');
 const upload = multer({ dest: 'public/' })

@@ -4,6 +4,7 @@ const multer = require('multer');
 const upload = multer({ dest: '../public/' });
 const path = require('path');
 const fs = require('fs');
+const passport = require('passport');
 
 router.use('/static', express.static(path.join(__dirname, 'public')))
 
@@ -25,7 +26,10 @@ let items = [{
 router.get('/', (req, res) => { res.json(items) });
 
 let cpUpload = upload.fields([{ name: 'images', maxCount: 4 }])
-router.post('/', cpUpload, (req, res) => {
+
+router.post('/',
+passport.authenticate('basic', { session: false }),
+ cpUpload, (req, res) => {
 
 let images = []
 //sets name for the uploaded image files
@@ -64,7 +68,9 @@ const newItem = {
 
 })
 
-router.delete('/:itemId', (req, res) => {
+router.delete('/:itemId', 
+passport.authenticate('basic', { session: false }),
+ (req, res) => {
     items = items.filter(item => item.itemId != req.params.itemId );
     res.sendStatus(200);
 })
